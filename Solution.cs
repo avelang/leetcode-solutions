@@ -85,7 +85,7 @@ public class Solution
         return result;
     }
 
-    // use dictionary instead of hashtable toavoid boxing/unboxing issues
+    // use dictionary instead of hashtable to avoid boxing/unboxing issues
     public int SingleNumber(int[] nums)
     {
         Dictionary<int,int> ht = new Dictionary<int, int>();
@@ -109,6 +109,7 @@ public class Solution
         return Convert.ToInt32(singleNum[0]);
     }
 
+    // Warm-Up Exercise : Check if the given string is an anagram of the other
     // note - converting string to char array & back
     public bool IsAnagram(string s, string t)
     {
