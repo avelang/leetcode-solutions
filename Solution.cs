@@ -143,8 +143,76 @@ public class Solution
         }
         return isPalindrome;
     }
-}
 
+    public bool CheckValidString(string s)
+    {
+        // Re-do
+        // if openCount==0 && starCount==0 && s[i]==')' -> return false
+        // if openCount==0 && starCount>0 && s[i]==')'-> openCount--;
+        // in the end , if starCount >= opencount, return true;
+        int openCount = 0;
+        int closeCount = 0;
+        int starCount = 0;
+        Stack<int> lastOpenIndex = new Stack<int>();
+        char[] array = s.ToCharArray();
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (s[i] == '(')
+            {
+                // openCount++;
+                lastOpenIndex.Push(i);
+            }
+            else if (s[i] == '*')
+            {
+                starCount++;
+            }
+            else if (s[i] == ')')
+            {
+                //if ((openCount == 0 && closeCount == 0))
+                //{
+                //    return false;
+                //}
+                //else
+                //{
+                //    closeCount++;
+                //}
+                if (lastOpenIndex.Count > 0)
+                {
+                    int indexNum = lastOpenIndex.Pop();
+                    array[indexNum] = ' ';
+                    array[i] = ' ';
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            //if ((openCount + starCount < closeCount))
+            //{
+            //    return false;
+            //}
+        }
+        string newStr = new string(array).Replace(" ",string.Empty);
+        // this new string can have *s plus either '(' or ')'
+        // if string contains '(', get count of that, see if all the open chars has a corresponding *
+        // i.e. string starting at the first index of '(' till the end, the count(*s) >= count('(')
+        // Similarly, for ')'
+        // ....
+        if (((Math.Abs(openCount - closeCount) > 0) && (Math.Abs(openCount - closeCount) <= starCount)) || (openCount - closeCount == 0))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
 public class ListNode
 {
       public int val;
