@@ -3,6 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+public class ListNode
+{
+    public int val;
+    public ListNode(int x) { val = x; }
+    public ListNode next;
+}
 public class Solution
 {
     public int LengthOfLongestSubstring(string s)
@@ -223,10 +229,31 @@ public class Solution
         }
         return new string(newCharArray).Replace(" ", string.Empty);
     }
+
+    public void MoveZeroes(int[] nums)
+    {
+        int zeroCount = 0;
+        List<int> zeroIndices = new List<int>();
+
+        for (int i = 0; i < nums.Length - zeroCount; i++)
+        {
+            if (nums[i] == 0)
+            {
+                zeroCount++;
+                Bubble(nums, i, nums.Length - zeroCount);
+                i--;
+            }
+        }
+    }
+
+    public void Bubble(int[] nums, int start, int end)
+    {
+        for (int i = start; i < end; i++)
+        {
+            nums[i] = nums[i] + nums[i + 1];
+            nums[i + 1] = nums[i] - nums[i + 1];
+            nums[i] = nums[i] - nums[i + 1];
+        }
+    }
 }
-public class ListNode
-{
-      public int val;
-      public ListNode next;
-      public ListNode(int x) { val = x; }
- }
+
