@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Solution
 {
@@ -144,73 +145,83 @@ public class Solution
         return isPalindrome;
     }
 
+    /*
+     Given a string containing only three types of characters: '(', ')' and '*', write a function to check whether this string is valid. 
+     We define the validity of a string by these rules:
+     Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+     Any right parenthesis ')' must have a corresponding left parenthesis '('.
+     Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+     '*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string.
+     An empty string is also valid.   
+     */
     public bool CheckValidString(string s)
     {
-        // Re-do
-        // if openCount==0 && starCount==0 && s[i]==')' -> return false
-        // if openCount==0 && starCount>0 && s[i]==')'-> openCount--;
-        // in the end , if starCount >= opencount, return true;
-        int openCount = 0;
-        int closeCount = 0;
-        int starCount = 0;
-        Stack<int> lastOpenIndex = new Stack<int>();
-        char[] array = s.ToCharArray();
+        char openChar = '(';
+        char closeChar = ')';
+        char wildcardChar = '*';
+        bool isValid = false;
 
-        for (int i = 0; i < array.Length; i++)
+        string newStr = NormalizeString(s, '(', ')'); // new string(array).Replace(" ", string.Empty);
+
+        if(newStr.Length>0)
         {
-            if (s[i] == '(')
+            if (newStr.Contains("(") && !newStr.Contains(")"))
             {
-                // openCount++;
-                lastOpenIndex.Push(i);
-            }
-            else if (s[i] == '*')
-            {
-                starCount++;
-            }
-            else if (s[i] == ')')
-            {
-                //if ((openCount == 0 && closeCount == 0))
-                //{
-                //    return false;
-                //}
-                //else
-                //{
-                //    closeCount++;
-                //}
-                if (lastOpenIndex.Count > 0)
+                string modString = NormalizeString(newStr, '(', '*');
+                if (!modString.Contains('('))
                 {
-                    int indexNum = lastOpenIndex.Pop();
-                    array[indexNum] = ' ';
-                    array[i] = ' ';
-                }
-                else
-                {
-                    return false;
+                    isValid = true;
                 }
             }
-            else
+            else if (!newStr.Contains("(") && newStr.Contains(")"))
             {
-                return false;
+                string modString = NormalizeString(newStr, '*', ')');
+                if (!modString.Contains(')'))
+                {
+                    isValid = true;
+                }
             }
-            //if ((openCount + starCount < closeCount))
-            //{
-            //    return false;
-            //}
-        }
-        string newStr = new string(array).Replace(" ",string.Empty);
-        // this new string can have *s plus either '(' or ')'
-        // if string contains '(', get count of that, see if all the open chars has a corresponding *
-        // i.e. string starting at the first index of '(' till the end, the count(*s) >= count('(')
-        // Similarly, for ')'
-        // ....
-        if (((Math.Abs(openCount - closeCount) > 0) && (Math.Abs(openCount - closeCount) <= starCount)) || (openCount - closeCount == 0))
-        {
-            return true;
+            else if (newStr.Contains("(") && newStr.Contains(")"))
+            {
+                // the reduced string has both open & closed chars, so split into two strings & normalize
+                string newCloseStr = newStr.Substring(0, newStr.LastIndexOf(closeChar) + 1); // eg : "***))"
+                string newOpenStr = newStr.Substring(newStr.IndexOf(openChar)); // eg: "*((***"
+                if (!NormalizeString(newCloseStr, wildcardChar, closeChar).Contains(closeChar) &&
+                    !NormalizeString(newOpenStr, openChar, wildcardChar).Contains(openChar))
+                    isValid = true;
+            }
+            else if (!newStr.Contains("(") && !newStr.Contains(")") && newStr.Contains("*"))
+            {
+                isValid = true;
+            }
         }
         else
         {
-            return false;
+            isValid = true;
         }
+        return isValid;
+    }
+    private static string NormalizeString(string str, char openChar, char closeChar)
+    {
+        Stack<int> OpenIndex = new Stack<int>();
+        char[] newCharArray = str.ToCharArray();
+        for (int i = 0; i < newCharArray.Length; i++)
+        {
+            if (newCharArray[i] == openChar)
+            {
+                OpenIndex.Push(i);
+            }
+            else if (newCharArray[i] == closeChar)
+            {
+                if (OpenIndex.Count > 0)
+                {
+                    int indexNum = OpenIndex.Pop();
+                    newCharArray[indexNum] = ' ';
+                    newCharArray[i] = ' ';
+                }
+            }
+        }
+        return new string(newCharArray).Replace(" ", string.Empty);
     }
 }
 public class ListNode
