@@ -250,10 +250,9 @@ public class Solution
     {
         for (int i = start; i < end; i++)
         {
-            nums[i] = nums[i] + nums[i + 1];
-            nums[i + 1] = nums[i] - nums[i + 1];
-            nums[i] = nums[i] - nums[i + 1];
+            nums[i] = nums[i + 1];
         }
+        nums[end] = 0;
     }
 }
 
