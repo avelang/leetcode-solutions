@@ -44,7 +44,6 @@ public class Solution
         }
         return MaxCount;
     }
-
     public int RemoveDuplicates(int[] nums)
     {
         if(nums.Length == 0)
@@ -64,7 +63,6 @@ public class Solution
         }
         return distinctCount;
     }
-
     // 14/04/2020
     public int[] CreateTargetArray(int[] nums, int[] index)
     {
@@ -91,7 +89,6 @@ public class Solution
         }
         return result;
     }
-
     // use dictionary instead of hashtable to avoid boxing/unboxing issues
     public int SingleNumber(int[] nums)
     {
@@ -115,7 +112,6 @@ public class Solution
         }
         return Convert.ToInt32(singleNum[0]);
     }
-
     // Warm-Up Exercise : Check if the given string is an anagram of the other
     // note - converting string to char array & back
     public bool IsAnagram(string s, string t)
@@ -126,7 +122,6 @@ public class Solution
         Array.Sort<char>(sorted_t);
         return String.Compare(new string(sorted_s), new string(sorted_t)) == 0;
     }
-
     public bool IsPalindrome(ListNode head)
     {
         ListNode current = head;
@@ -150,7 +145,6 @@ public class Solution
         }
         return isPalindrome;
     }
-
     /*
      Given a string containing only three types of characters: '(', ')' and '*', write a function to check whether this string is valid. 
      We define the validity of a string by these rules:
@@ -229,7 +223,6 @@ public class Solution
         }
         return new string(newCharArray).Replace(" ", string.Empty);
     }
-
     public void MoveZeroes(int[] nums)
     {
         int zeroCount = 0;
@@ -245,7 +238,6 @@ public class Solution
             }
         }
     }
-
     public void Bubble(int[] nums, int start, int end)
     {
         for (int i = start; i < end; i++)
@@ -253,6 +245,61 @@ public class Solution
             nums[i] = nums[i + 1];
         }
         nums[end] = 0;
+    }
+    // maximise profit by doing buy & sell stocks
+    public int MaxProfit(int[] prices)
+    {
+        int[] bottoms = { };
+        int[] tops = { };
+        int minIndex = -1;
+        int maxIndex = -1;
+        int profit = 0;
+
+        for (int i = 0; i < prices.Length; i++)
+        {
+            // identify min index
+            if (i < prices.Length - 1)
+            {
+                if (i == 0)
+                {
+                    if (prices[i + 1] > prices[i])
+                        minIndex = i;
+                }
+                else
+                {
+                    if ((prices[i - 1] >= prices[i] && prices[i] < prices[i + 1])||
+                        (prices[i - 1] > prices[i] && prices[i] <= prices[i + 1]))
+                        minIndex = i;
+                }
+            }
+            // identify max index
+            if (i > 0)
+            {
+                if (i == prices.Length - 1)
+                {
+                    if (prices[i - 1] < prices[i])
+                    {
+                        maxIndex = i;
+                    }
+                }
+                else
+                {
+                    if ((prices[i - 1] <= prices[i] && prices[i] > prices[i + 1])||
+                        (prices[i - 1] < prices[i] && prices[i] >= prices[i + 1]))
+                        if (minIndex!=-1)
+                        {
+                            maxIndex = i;
+                        }
+                }
+            }
+            if (minIndex != -1 && maxIndex != -1 && (maxIndex> minIndex))
+            {
+                profit = profit + prices[maxIndex] - prices[minIndex];
+                minIndex = -1;
+                maxIndex = -1;
+            }
+        }
+        return profit;
     }
 }
 
