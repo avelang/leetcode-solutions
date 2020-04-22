@@ -312,42 +312,39 @@ public class Solution
         return (newStr == revNewStr);
     }
 
-    public void Merge(int[] nums1, int m, int[] nums2, int n)
+    public void MergeSortedArrays(int[] nums1, int m, int[] nums2, int n)
     {
         int lastIndex = m - 1;
-        int nums1Count = 0;
-        int nums2Count = 0;
+        int count = 0;
 
-        for (int i = 0; i < m + n - 1; i++)
+        for (int i = 0; i < m + n; i++)
         {
-            if (nums1[nums1Count] <= nums2[nums2Count])
+            if (count < nums2.Length) // all in num2 have been accounted for
             {
-                if (nums1Count != i)
+                if (i > lastIndex)
                 {
-                    for (int j = lastIndex; j >= i; j--)
+                    nums1[i] = nums2[count];
+                    count++;
+                }
+                else
+                {
+                    if (nums1[i] > nums2[count])
                     {
-                        nums1[j + 1] = nums1[j];
+                        for (int j = lastIndex; j >= i; j--)
+                        {
+                            nums1[j + 1] = nums1[j];
+                        }
+                        nums1[i] = nums2[count];
+                        lastIndex++;
+                        count++;
                     }
-                    nums1[i] = nums1[nums1Count];
-                    lastIndex++;
                 }
-
-                nums1Count++;
-            }
-            else
-            {
-                for (int j = lastIndex; j >= i; j--)
-                {
-                    nums1[j + 1] = nums1[j];
-                }
-                nums1[i] = nums2[nums2Count];
-                lastIndex++;
-                nums2Count++;
             }
         }
-
     }
 
+    // Pay amount = M to buy item worth P. How would be the balance be 
+    // tendered, given the denominations list, with minimum coins
     public int[] getChange(int M, double P)
     {
         int[] denominations = { 1, 5, 10, 25, 50, 100 }; //cents
