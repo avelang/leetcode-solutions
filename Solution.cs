@@ -254,6 +254,9 @@ public class Solution
         int minIndex = -1;
         int maxIndex = -1;
         int profit = 0;
+        string str = ",tutu6868";
+
+        string newStr = new string(str.ToCharArray().Where(c => char.IsLetterOrDigit(c)).ToArray());
 
         for (int i = 0; i < prices.Length; i++)
         {
@@ -300,6 +303,65 @@ public class Solution
             }
         }
         return profit;
+    }
+
+    public bool IsPalindrome(string s)
+    {
+        string newStr = new string(s.ToCharArray().Where(c => char.IsLetterOrDigit(c)).ToArray()).ToLower();
+        string revNewStr = new string(newStr.Reverse().ToArray()).ToLower();
+        return (newStr == revNewStr);
+    }
+
+    public void Merge(int[] nums1, int m, int[] nums2, int n)
+    {
+        int lastIndex = m - 1;
+        int nums1Count = 0;
+        int nums2Count = 0;
+
+        for (int i = 0; i < m + n - 1; i++)
+        {
+            if (nums1[nums1Count] <= nums2[nums2Count])
+            {
+                if (nums1Count != i)
+                {
+                    for (int j = lastIndex; j >= i; j--)
+                    {
+                        nums1[j + 1] = nums1[j];
+                    }
+                    nums1[i] = nums1[nums1Count];
+                    lastIndex++;
+                }
+
+                nums1Count++;
+            }
+            else
+            {
+                for (int j = lastIndex; j >= i; j--)
+                {
+                    nums1[j + 1] = nums1[j];
+                }
+                nums1[i] = nums2[nums2Count];
+                lastIndex++;
+                nums2Count++;
+            }
+        }
+
+    }
+
+    public int[] getChange(int M, double P)
+    {
+        int[] denominations = { 1, 5, 10, 25, 50, 100 }; //cents
+        int balance = M * 100 - Convert.ToInt32(P * 100);
+        int[] change = { 0, 0, 0, 0, 0, 0 };
+        for (int i = denominations.Length - 1; i >= 0; i--)
+        {
+            if (balance >= denominations[i])
+            {
+                change[i] = balance / denominations[i];
+                balance = balance % denominations[i];
+            }
+        }
+        return change;
     }
 }
 
